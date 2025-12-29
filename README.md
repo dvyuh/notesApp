@@ -14,7 +14,7 @@ A simple desktop app that records audio and generates notes from it.
 - Python 3.9+
 - pip
 - A working microphone
-
+- ollama(install ollama model "mistral")
 ## Setup
 
 1. Create a virtual environment

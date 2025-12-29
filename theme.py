@@ -1,7 +1,7 @@
 # theme.py
 from PyQt6.QtGui import QColor
 
-# --- COLOR PALETTE ---
+# --- COLOR PALETTE --
 COLORS = {
     "dark_bg": "#213448",      # Deep Charcoal Blue
     "medium_blue": "#547792",  # Muted Blue

@@ -12,7 +12,7 @@ import whisper
 import ollama
 from PyQt6.QtCore import QThread, pyqtSignal
 
-# Settings
+# Setting
 MODEL_SIZE = "tiny"
 OLLAMA_MODEL = "mistral"
 FS = 16000

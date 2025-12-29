@@ -1,4 +1,4 @@
-# Ignore the massive library folders
+# Ignore the massive library folder
 venv/
 .venv/
 bin/

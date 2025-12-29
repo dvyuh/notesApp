@@ -1,0 +1,13 @@
+# Ignore the massive library folders
+venv/
+.venv/
+bin/
+lib/
+include/
+
+# Ignore Python's temporary cache
+__pycache__/
+*.pyc
+
+# Ignore your actual generated notes so they don't clutter your code history
+output/

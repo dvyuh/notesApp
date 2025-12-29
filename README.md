@@ -23,17 +23,23 @@ python3 -m venv venv
 ```
 
 2. Activate the virtual environment
-macOS / Linux
-```source venv/bin/activate
+- macOS / Linux
+
+```bash
+source venv/bin/activate
 ```
-Windows
-```venv\Scripts\activate
+- Windows
+
+```bash
+venv\Scripts\activate
 ```
 
 3. Install dependencies
-```pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
 ```
 
 4. Run
-```python main.py
+```bash 
+python main.py
 ```

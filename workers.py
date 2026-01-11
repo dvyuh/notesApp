@@ -2,8 +2,6 @@
 import os
 import datetime
 import json
-import re
-import warnings
 from pathlib import Path
 import numpy as np
 import sounddevice as sd
@@ -39,6 +37,8 @@ class RecordingThread(QThread):
         
         if self.frames:
             recording_array = np.concatenate(self.frames, axis=0)
+            # Normalize to 16-bit PCM for Whisper
+            recording_array = (recording_array * 32767).astype(np.int16)
             write(self.filename, self.fs, recording_array)
             self.completed.emit()
 
@@ -56,46 +56,57 @@ class ProcessingThread(QThread):
 
     def run(self):
         try:
-            self.progress.emit("✍️ Transcribing audio...")
+            self.progress.emit("✍️ Transcribing audio (Whisper)...")
+            # Load model (consider moving this to __init__ if doing multiple runs)
             model = whisper.load_model(MODEL_SIZE, device="cpu")
             result = model.transcribe(self.audio_file, fp16=False)
             raw_text = result['text'].strip()
-            segments = result.get('segments', [])
 
-            if not raw_text: raise Exception("No speech detected.")
+            if not raw_text: 
+                raise Exception("No speech detected in audio.")
 
-            self.progress.emit("🤖 Analyzing content...")
-            multi_notes = self._generate_multi_layer_notes(raw_text)
-            
-            self.progress.emit("📚 Extracting concepts...")
-            concepts = self._extract_concepts(raw_text)
+            self.progress.emit(f"🤖 AI is thinking ({OLLAMA_MODEL})...")
+            summary_notes = self._generate_notes_with_ollama(raw_text)
             
             self.progress.emit("💾 Saving files...")
-            output_data = self._save_outputs(raw_text, multi_notes, concepts, segments)
+            output_data = self._save_outputs(raw_text, summary_notes)
             
             self.finished.emit(output_data)
         except Exception as e:
             self.error.emit(str(e))
 
-    # Paste all your helper methods (_generate_multi_layer_notes, etc.) here...
-    # (Keeping it short for this example, but move the full logic functions here)
-    
-    def _generate_multi_layer_notes(self, text):
-        # ... your existing code ...
-        return {'tldr': "Mock Summary", 'key_ideas': "Mock Ideas"} 
+    def _generate_notes_with_ollama(self, text):
+        """Sends the transcript to Ollama for summarization."""
+        prompt = f"""
+        Please provide structured study notes for the following transcript. 
+        Include a 'Summary' section and a 'Key Takeaways' bulleted list.
+        
+        Transcript:
+        {text}
+        """
+        try:
+            response = ollama.generate(model=OLLAMA_MODEL, prompt=prompt)
+            return response['response']
+        except Exception as e:
+            return f"Ollama Error: {str(e)}"
 
-    def _extract_concepts(self, text):
-        return ["Concept A", "Concept B"]
-
-    def _save_outputs(self, raw_text, multi_notes, concepts, segments):
-        # ... your existing save logic ...
+    def _save_outputs(self, raw_text, summary_notes):
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
+        
         ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         notes_path = output_dir / f"notes_{ts}.md"
         transcript_path = output_dir / f"transcript_{ts}.md"
         
-        with open(notes_path, "w") as f: f.write("Your Notes Content")
-        with open(transcript_path, "w") as f: f.write("Your Transcript Content")
+        # Save the actual AI generated notes
+        with open(notes_path, "w", encoding="utf-8") as f:
+            f.write(f"# Study Notes - {ts}\n\n{summary_notes}")
             
-        return {'notes_path': str(notes_path), 'transcript_path': str(transcript_path)}
+        # Save the raw transcript
+        with open(transcript_path, "w", encoding="utf-8") as f:
+            f.write(f"# Raw Transcript - {ts}\n\n{raw_text}")
+            
+        return {
+            'notes_path': str(notes_path), 
+            'transcript_path': str(transcript_path)
+        }

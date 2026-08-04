@@ -68,13 +68,13 @@ Run the app:
 python main.py
 ```
 
-1. Select a field and press the 🎤 mic button to record your input for that field, or press **✏️ Override** to type it manually.
+1. Select a field and press the mic button to record your input for that field, or press ** Override** to type it manually.
 2. Say "next field," "clear field," or "confirm" while recording to control the form by voice.
 3. Watch the status bar and warning banner for processing progress and vitals validation issues.
-4. Press **💾 Save & New Patient** to commit the current record (after confirming in the dialog) and start a fresh form.
-5. Use **📂 Saved Patients** on the right to reload any previously saved patient into the form.
-6. Check the **📝 Notes** and **🗣️ Transcript** tabs to review the AI-generated notes and raw transcript for the most recently processed audio.
-7. Use **📤 Upload Audio** to process a pre-recorded audio file instead of recording live.
+4. Press **Save & New Patient** to commit the current record (after confirming in the dialog) and start a fresh form.
+5. Use ** Saved Patients** on the right to reload any previously saved patient into the form.
+6. Check the ** Notes** and **Transcript** tabs to review the AI-generated notes and raw transcript for the most recently processed audio.
+7. Use ** Upload Audio** to process a pre-recorded audio file instead of recording live.
 
 > **Note:** Patient records are stored in-session only (in memory) — closing the app clears the saved patient list.
 

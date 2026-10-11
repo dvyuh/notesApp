@@ -1,4 +1,5 @@
 # VoiceNotes — Patient Intake 
+<img width="885" height="803" alt="notesapp" src="https://github.com/user-attachments/assets/329b3b52-936c-44da-9d3f-145583db3acf" />
 
 A desktop app (PyQt6) for capturing structured patient intake records using voice, powered by local speech-to-text and an LLM for field extraction. Speak naturally into a field and the app transcribes, extracts the relevant value, and fills it in — or type it manually with a one-click override.
 
